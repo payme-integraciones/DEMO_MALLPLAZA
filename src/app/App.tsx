@@ -1,14 +1,28 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Home } from './components/Home';
 import { Login } from './components/Login';
 import { Dashboard } from './components/Dashboard';
 import { ClientPortal } from './components/ClientPortal';
 import { BackOffice } from './components/BackOffice';
+import { ManualUsuario } from './components/ManualUsuario';
 
-type View = 'home' | 'tenant-login' | 'tenant-dashboard' | 'client' | 'admin';
+type View = 'home' | 'tenant-login' | 'tenant-dashboard' | 'client' | 'admin' | 'manual';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('home');
+
+  useEffect(() => {
+    const syncViewWithHash = () => {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (hash === 'manual' || hash === '/manual') {
+        setCurrentView('manual');
+      }
+    };
+
+    syncViewWithHash();
+    window.addEventListener('hashchange', syncViewWithHash);
+    return () => window.removeEventListener('hashchange', syncViewWithHash);
+  }, []);
 
   const handlePortalSelection = (portal: 'tenant' | 'client' | 'admin') => {
     if (portal === 'tenant') {
@@ -25,6 +39,9 @@ export default function App() {
   };
 
   const handleBackToHome = () => {
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
     setCurrentView('home');
   };
 
@@ -48,6 +65,10 @@ export default function App() {
       
       {currentView === 'admin' && (
         <BackOffice onBack={handleBackToHome} />
+      )}
+
+      {currentView === 'manual' && (
+        <ManualUsuario onBack={handleBackToHome} />
       )}
     </div>
   );

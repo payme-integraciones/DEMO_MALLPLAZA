@@ -4,9 +4,9 @@
 Esta guia explica, paso a paso, como usar la web de la demo para completar los flujos principales: login de arrendatario, pago de alquileres, consulta por codigo de comercio y operaciones de back-office.
 
 ## 2. Antes de empezar
-1. Instala dependencias con `npm i`.
-2. Inicia el servidor con `npm run dev`.
-3. Abre la URL que entrega Vite (usualmente `http://localhost:5173`).
+1. Abre la URL publicada de la demo.
+2. Selecciona el portal que deseas usar: Arrendatarios, Consulta de Cliente o Back-office.
+3. Usa codigos de prueba y datos de demo para ejecutar los flujos de pago.
 
 Nota: la demo consume recursos remotos de la pasarela Pay-me. Necesitas acceso a internet.
 

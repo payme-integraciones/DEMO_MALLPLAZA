@@ -23,6 +23,16 @@ interface PaymentGatewayModalProps {
 type PaymentMethod = 'CARD' | 'YAPE' | 'PAGOEFECTIVO' | 'BANK_TRANSFER';
 type GatewayMethodCode = 'CARD' | 'YAPE' | 'QR' | 'CUOTEALO' | 'PAGOEFECTIVO' | 'BANK_TRANSFER';
 type PaymentAmountOption = 'TOTAL' | 'AMOUNT' | 'COMMISSION';
+type GatewayLanguage = 'es' | 'en';
+type GatewayI18n = {
+  mode: 'single' | 'multi';
+  default_language: GatewayLanguage;
+  languages: GatewayLanguage[];
+};
+type GatewayDisplaySettings = {
+  methods: GatewayMethodCode[];
+  i18n?: GatewayI18n;
+};
 
 
 interface BillingState {
@@ -48,6 +58,11 @@ declare global {
       };
       display_settings: {
         methods: GatewayMethodCode[];
+        i18n?: {
+          mode: 'single' | 'multi';
+          default_language: 'es' | 'en';
+          languages: Array<'es' | 'en'>;
+        };
       };
     }) => {
       init: (
@@ -417,6 +432,11 @@ export function PaymentGatewayModal({ isOpen, onClose, rental, onConfirmPayment 
         display_settings: {
           methods: selectedMethods,
         },
+        // i18n: {
+        //     mode: 'single',
+        //     default_language: 'es',
+        //     languages: ['es'],
+        //   }
       });
 
       target.innerHTML = '';
@@ -476,8 +496,37 @@ export function PaymentGatewayModal({ isOpen, onClose, rental, onConfirmPayment 
     <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center px-2 sm:px-4 py-4">
       <style>{`
         #demo .payment-method-form-wrapper {
-          margin-left: 5px !important;
-          margin-right: 5px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        #demo .payment-method-wrapper {
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        #demo .payment-methods-container {
+          display: flex !important;
+          justify-content: center !important;
+        }
+        .payment-wrap {
+          grid-column: 2 / 3;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 50px;
+          z-index: 1;
+          border: 1px solid #e5e7eb;
+          border-radius: 12px;
+          background: #ffffff;
+        }
+        .payment-container {
+          width: 100%;
+          max-width: 100%;
+          padding: 12px;
+          border-radius: 14px;
+          border: 1px solid #e7eef6;
+          background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
         #demo {
           width: 100%;
@@ -492,20 +541,15 @@ export function PaymentGatewayModal({ isOpen, onClose, rental, onConfirmPayment 
           width: 100%;
         }
         .payme-scroll {
-          max-height: 70vh;
-          overflow-y: auto;
-          -webkit-overflow-scrolling: touch;
+          width: 100%;
         }
         @media (max-width: 640px) {
-          .payme-scale {
-            transform: scale(0.85);
-            transform-origin: top center;
+          .payment-wrap {
+            padding: 8px 0;
           }
-        }
-        @media (min-width: 640px) {
-          .payme-scroll {
-            max-height: none;
-            overflow: visible;
+          .payment-container {
+            width: 100%;
+            padding: 8px;
           }
         }
       `}</style>
@@ -834,15 +878,17 @@ export function PaymentGatewayModal({ isOpen, onClose, rental, onConfirmPayment 
               )}
 
               {detailsView === 'checkout' && (
-                <div className="rounded-lg border border-gray-200 p-4">
-                  <div className="payme-scroll min-h-[260px] sm:min-h-[320px] rounded-lg border border-dashed border-gray-300 p-3">
-                    <div className="w-full overflow-x-auto">
-                      <div className="payme-scale w-full min-w-[280px] sm:w-[420px] sm:mx-auto">
-                        <div id="demo" className="w-full" />
+                <section className="payment-wrap">
+                  <div className="payment-container">
+                    <div className="payme-scroll">
+                      <div className="w-full">
+                        <div className="payme-scale w-full">
+                          <div id="demo" className="w-full" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </section>
               )}
 
               {detailsView === 'checkout' && (
